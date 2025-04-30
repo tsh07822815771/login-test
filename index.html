@@ -6,15 +6,9 @@
   <title>تسجيل دخول</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Tajawal&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> <!-- للرموز -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', sans-serif;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
     body {
       font-family: 'Tajawal', sans-serif;
       background-color: #f4f6f9;
@@ -24,7 +18,6 @@
       height: 100vh;
       padding: 20px;
     }
-
     .login-container {
       background-color: #fff;
       padding: 40px;
@@ -33,14 +26,12 @@
       width: 100%;
       max-width: 400px;
     }
-
     .login-container h2 {
       margin-bottom: 20px;
       color: #007bff;
       text-align: center;
       font-size: 26px;
     }
-
     .input-field {
       width: 100%;
       padding: 15px;
@@ -50,11 +41,7 @@
       font-size: 16px;
       outline: none;
     }
-
-    .input-field:focus {
-      border-color: #007bff;
-    }
-
+    .input-field:focus { border-color: #007bff; }
     .login-btn {
       width: 100%;
       padding: 15px;
@@ -67,17 +54,12 @@
       transition: background-color 0.3s;
       margin: 15px 0;
     }
-
-    .login-btn:hover {
-      background-color: #0056b3;
-    }
-
+    .login-btn:hover { background-color: #0056b3; }
     .social-btns {
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
     }
-
     .social-btn {
       display: flex;
       align-items: center;
@@ -85,24 +67,12 @@
       padding: 12px 20px;
       border-radius: 8px;
       cursor: pointer;
-      width: 48%;
+      width: 100%;
       font-size: 16px;
-    }
-
-    .google-btn {
       background-color: #db4437;
       color: white;
     }
-
-    .facebook-btn {
-      background-color: #4267b2;
-      color: white;
-    }
-
-    .social-btn i {
-      margin-left: 10px;
-    }
-
+    .social-btn i { margin-left: 10px; }
     .register-link {
       display: block;
       text-align: center;
@@ -111,10 +81,7 @@
       font-size: 16px;
       text-decoration: none;
     }
-
-    .register-link:hover {
-      text-decoration: underline;
-    }
+    .register-link:hover { text-decoration: underline; }
   </style>
 </head>
 
@@ -130,68 +97,34 @@
 
     <div class="social-btns">
       <!-- Google Login Button -->
-      <button class="social-btn google-btn" id="google-signin-btn">
+      <div id="googleSignInBtn" class="social-btn google-btn">
         <i class="fab fa-google"></i> تسجيل الدخول عبر جوجل
-      </button>
-      <!-- Facebook Login Button -->
-      <button class="social-btn facebook-btn" id="facebook-signin-btn">
-        <i class="fab fa-facebook-f"></i> تسجيل الدخول عبر فيسبوك
-      </button>
+      </div>
     </div>
 
     <a href="#" class="register-link">ليس لديك حساب؟ تسجيل جديد</a>
   </div>
 
-  <!-- Google Sign-In SDK -->
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-
-  <!-- Facebook SDK -->
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=YOUR_FACEBOOK_APP_ID&autoLogAppEvents=1"></script>
-
+  <!-- Google Identity Services SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
-    // Google Sign-In Configuration
-    function onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
-      alert("مرحباً، " + profile.getName());
-      // يمكنك الآن إرسال الـ profile data إلى الخادم للتحقق من التسجيل.
-    }
-
-    // إعدادات Google Sign-In مع Client ID
-    gapi.load('auth2', function() {
-      gapi.auth2.init({
-        client_id: '110181416411-cn9daabc4h5r0v824g29bvo13kvt7edf.apps.googleusercontent.com' // ضع هنا الـ Client ID الخاص بك
-      });
-    });
-
-    // Facebook Sign-In Configuration
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId: 'YOUR_FACEBOOK_APP_ID', // استبدلها بالـ App ID الخاص بك
-        cookie: true,
-        xfbml: true,
-        version: 'v12.0'
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "https://110181416411-cn9daabc4h5r0v824g29bvo13kvt7edf.apps.googleusercontent.com",
+        callback: handleCredentialResponse
       });
 
-      // تسجيل الدخول عبر فيسبوك
-      document.getElementById('facebook-signin-btn').onclick = function() {
-        FB.login(function(response) {
-          if (response.authResponse) {
-            alert("تم تسجيل الدخول عبر فيسبوك");
-          } else {
-            alert("فشل تسجيل الدخول عبر فيسبوك");
-          }
-        });
-      }
+      document.getElementById("googleSignInBtn").onclick = function () {
+        google.accounts.id.prompt(); // تفتح نافذة تسجيل الدخول
+      };
     };
 
-    // تحميل الـ SDK الخاص بـ Facebook
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    function handleCredentialResponse(response) {
+      // استخراج بيانات المستخدم من JWT
+      const jwt = response.credential;
+      const payload = JSON.parse(atob(jwt.split('.')[1]));
+      alert("مرحباً، " + payload.name + "\nبريدك: " + payload.email);
+    }
   </script>
 
 </body>
